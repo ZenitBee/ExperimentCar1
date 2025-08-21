@@ -30,22 +30,24 @@ print("initial observation:" , observation)
 
 
 # Divide our observation space into segments
-pos_space = np.linspace(-2.5, 2.5, 20)
-vel_space = np.linspace(-2.5, 2.5, 20)
+pos_space = np.linspace(-2.5, 2.5, 10)
+vel_space = np.linspace(-2.5, 2.5, 10)
 theta_space = np.linspace(-6.2831855, 6.2831855, 20)
-V_theta_space = np.linspace(-10,10,20)
+V_theta_space = np.linspace(-10,10,10)
 bool1_space = [0,1]
 bool2_space = [0,1]
 
 print("divided obs space")
-print(pos_space, vel_space, theta_space, V_theta_space, bool1_space, bool2_space)
+# print(pos_space, vel_space, theta_space, V_theta_space, bool1_space, bool2_space)
+print(env.action_space.n)
+q = np.zeros((len(pos_space), len(vel_space),len(theta_space), len(V_theta_space), env.action_space.n)) # init a 10x10x20x10x4
 
 
 
 
-for _ in range(150):
-    observation, reward, terminated, truncated, info = env.step(env.action_space.sample())
-
-    # If the episode has ended then we can reset to start a new episode
-    if terminated or truncated:
-        observation, info = env.reset()
+# for _ in range(150):
+#     observation, reward, terminated, truncated, info = env.step(env.action_space.sample())
+#
+#     # If the episode has ended then we can reset to start a new episode
+#     if terminated or truncated:
+#         observation, info = env.reset()
