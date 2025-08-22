@@ -42,6 +42,36 @@ print("divided obs space")
 print(env.action_space.n)
 q = np.zeros((len(pos_space), len(vel_space),len(theta_space), len(V_theta_space), env.action_space.n)) # init a 10x10x20x10x4
 
+episodes = 5000
+# number of discrete episodes that will be run by our agent
+
+learning_rate_a = 0.9
+# alpha or learning rate. bounded between 0 and 1, governs how much the values in the Q table are changed by new estimates.
+
+discount_factor_g = 0.9
+# gamma or discount factor. The value placed on future rewards.
+
+epsilon = 1         # 1 = 100% random actions
+epsilon_decay_rate = 2/episodes # epsilon decay rate
+# Epsilon governs how greedy our agent is when selecting agents.
+
+# This is the exploration vs exploitation dichotomy
+# Typically this rate decays from being very high (i.e random) to low (i.e greedy),
+# letting our agent benefit by learning from the richer exploration of the early runs,
+# before locking in and trying to maximise rewards in the later runs.
+
+
+rng = np.random.default_rng()   # random number generator
+
+rewards_per_episode = np.zeros(episodes)
+
+
+
+
+
+
+
+
 
 
 
