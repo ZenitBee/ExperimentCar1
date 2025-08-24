@@ -69,7 +69,7 @@
       <updated>1755801893459</updated>
       <workItem from="1755801894499" duration="350000" />
       <workItem from="1755803653367" duration="8423000" />
-      <workItem from="1756066915588" duration="1815000" />
+      <workItem from="1756066915588" duration="11924000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <option name="closed" value="true" />
@@ -127,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756067144029</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="test">
+      <option name="closed" value="true" />
+      <created>1756068742535</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1756068742535</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -149,6 +157,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ExperimentCar1$main.coverage" NAME="main Coverage Results" MODIFIED="1755953150618" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ExperimentCar1$main.coverage" NAME="main Coverage Results" MODIFIED="1756078440874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
