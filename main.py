@@ -29,44 +29,99 @@ print("initial observation:" , observation)
 # 3: fire right orientation engine
 
 
-# Divide our observation space into segments
-pos_space = np.linspace(-2.5, 2.5, 10)
-vel_space = np.linspace(-2.5, 2.5, 10)
-theta_space = np.linspace(-6.2831855, 6.2831855, 20)
-V_theta_space = np.linspace(-10,10,10)
-bool1_space = [0,1]
-bool2_space = [0,1]
-
-print("divided obs space")
-# print(pos_space, vel_space, theta_space, V_theta_space, bool1_space, bool2_space)
-print(env.action_space.n)
-q = np.zeros((len(pos_space), len(vel_space),len(theta_space), len(V_theta_space), env.action_space.n)) # init a 10x10x20x10x4
-
-episodes = 5000
-# number of discrete episodes that will be run by our agent
-
-learning_rate_a = 0.9
-# alpha or learning rate. bounded between 0 and 1, governs how much the values in the Q table are changed by new estimates.
-
-discount_factor_g = 0.9
-# gamma or discount factor. The value placed on future rewards.
-
-epsilon = 1         # 1 = 100% random actions
-epsilon_decay_rate = 2/episodes # epsilon decay rate
-# Epsilon governs how greedy our agent is when selecting agents.
-
-# This is the exploration vs exploitation dichotomy
-# Typically this rate decays from being very high (i.e random) to low (i.e greedy),
-# letting our agent benefit by learning from the richer exploration of the early runs,
-# before locking in and trying to maximise rewards in the later runs.
-
-
-rng = np.random.default_rng()   # random number generator
-
-rewards_per_episode = np.zeros(episodes)
-
 
 def run(episodes, is_training=True, render=False):
+    # This is our main loop
+
+    env = gym.make("LunarLander-v3", render_mode="human")
+
+    # Divide our observation space into segments
+    pos_space = np.linspace(-2.5, 2.5, 10)
+    vel_space = np.linspace(-2.5, 2.5, 10)
+    theta_space = np.linspace(-6.2831855, 6.2831855, 20)
+    V_theta_space = np.linspace(-10, 10, 10)
+    bool1_space = [0, 1]
+    bool2_space = [0, 1]
+
+    print("divided obs space")
+    # print(pos_space, vel_space, theta_space, V_theta_space, bool1_space, bool2_space)
+    print(env.action_space.n)
+    q = np.zeros((len(pos_space), len(vel_space), len(theta_space), len(V_theta_space),
+                  env.action_space.n))  # init a 10x10x20x10x4
+
+    episodes = 5000
+    # number of discrete episodes that will be run by our agent
+
+    learning_rate_a = 0.9
+    # alpha or learning rate. bounded between 0 and 1, governs how much the values in the Q table are changed by new estimates.
+
+    discount_factor_g = 0.9
+    # gamma or discount factor. The value placed on future rewards.
+
+    epsilon = 1  # 1 = 100% random actions
+    epsilon_decay_rate = 2 / episodes  # epsilon decay rate
+    # Epsilon governs how greedy our agent is when selecting agents.
+
+    # This is the exploration vs exploitation dichotomy
+    # Typically this rate decays from being very high (i.e random) to low (i.e greedy),
+    # letting our agent benefit by learning from the richer exploration of the early runs,
+    # before locking in and trying to maximise rewards in the later runs.
+
+    rng = np.random.default_rng()
+    # random number generator compared with the value Epsilon to determine greed.
+
+    rewards_per_episode = np.zeros(episodes)
+    # sets up a matrix for our rewards, to be used in the bellman equation
+
+    for i in range(episodes):
+        state = env.reset()  # Starting position
+        state_pos = np.digitize(state[0], pos_space)
+        state_vel = np.digitize(state[1], vel_space)
+        state_theta = np.digitize(state[2], theta_space)
+        state_V_theta = np.digitize(state[3], V_theta_space)
+
+        # by using np.digitize() method, we are able to get the array of indices of the bin of each value,
+        # which belongs to an array by using this method.
+        # basically, used to extract our arrays from the big q array.
+
+        terminated = False  # True when reached goal
+
+        rewards = 0
+
+        while (not terminated and rewards > -1000):
+
+            if is_training and rng.random() < epsilon:
+                # Choose random action (0=drive left, 1=stay neutral, 2=drive right)
+                action = env.action_space.sample()
+            else:
+                action = np.argmax(q[state_pos, state_vel, state_theta, state_V_theta :])
+
+            new_state, reward, terminated, _, _ = env.step(action)
+            new_state_pos = np.digitize(new_state[0], pos_space)
+            new_state_vel = np.digitize(new_state[1], vel_space)
+            new_state_theta = np.digitize(new_state[2], theta_space)
+            new_state_V_theta = np.digitize(new_state[3], V_theta_space)
+
+            if is_training:
+                q[state_pos, state_vel, state_theta, state_V_theta, action] = q[state_pos, state_vel, state_theta,state_V_theta, action] + learning_rate_a * (
+                        reward + discount_factor_g * np.max(q[new_state_pos, new_state_vel, new_state_theta, new_state_V_theta :]) - q[
+                    state_pos, state_vel, state_theta, state_V_theta, action]
+                )
+
+            state = new_state
+            state_pos = new_state_pos
+            state_vel = new_state_vel
+            state_theta = new_state_theta
+            state_V_theta = new_state_V_theta
+
+            rewards += reward
+
+        epsilon = max(epsilon - epsilon_decay_rate, 0)
+
+        rewards_per_episode[i] = rewards
+
+    env.close()
+
 
 
 
