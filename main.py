@@ -66,18 +66,10 @@ rng = np.random.default_rng()   # random number generator
 rewards_per_episode = np.zeros(episodes)
 
 
+def run(episodes, is_training=True, render=False):
 
 
 
 
 
 
-
-
-
-# for _ in range(150):
-#     observation, reward, terminated, truncated, info = env.step(env.action_space.sample())
-#
-#     # If the episode has ended then we can reset to start a new episode
-#     if terminated or truncated:
-#         observation, info = env.reset()
