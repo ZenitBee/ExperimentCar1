@@ -34,15 +34,15 @@ import matplotlib.pyplot as plt
 def run(episodes, is_training=True, render=False):
     # This is our main loop
 
-    env = gym.make("LunarLander-v3", render_mode="human")
+    env = gym.make("LunarLander-v3", render_mode="none")
 
     # Divide our observation space into segments
-    x_pos_space = np.linspace(-2.5, 2.5, 8)
-    y_pos_space = np.linspace(-2.5, 2.5, 8)
-    x_vel_space = np.linspace(-2.5, 2.5, 8)
-    y_vel_space = np.linspace(-2.5, 2.5, 8)
+    x_pos_space = np.linspace(-2.5, 2.5, 16)
+    y_pos_space = np.linspace(-2.5, 2.5, 16)
+    x_vel_space = np.linspace(-2.5, 2.5, 16)
+    y_vel_space = np.linspace(-2.5, 2.5, 16)
     theta_space = np.linspace(-6.2831855, 6.2831855, 24)
-    V_theta_space = np.linspace(-10, 10, 8)
+    V_theta_space = np.linspace(-10, 10, 16)
     bool1_space = [0, 1]
     bool2_space = [0, 1] #these two are not being used
 
@@ -93,8 +93,10 @@ def run(episodes, is_training=True, render=False):
         truncated = False
 
         rewards = 0
+        truncated_count = 0
 
-        while (not terminated or truncated and rewards > -1000):
+        # while (not terminated or truncated and rewards > -1000):
+        while not terminated and not truncated and rewards > -1000:
 
             if is_training and rng.random() < epsilon:
                 # Choose random action (0=drive left, 1=stay neutral, 2=drive right)
@@ -133,11 +135,14 @@ def run(episodes, is_training=True, render=False):
             state_V_theta = new_state_V_theta
 
             rewards += reward
+            truncated_count += 1
+            if truncated_count > 500:
+                truncated = True
 
         epsilon = max(epsilon - epsilon_decay_rate, 0)
 
         rewards_per_episode[i] = rewards
-        print("rewards this episode were", rewards)
+        # print("rewards this episode were", rewards)
 
 
     env.close()
@@ -151,12 +156,15 @@ def run(episodes, is_training=True, render=False):
     mean_rewards = np.zeros(episodes)
     for t in range(episodes):
         mean_rewards[t] = np.mean(rewards_per_episode[max(0, t - 100):(t + 1)])
+    plt.xlabel("episode number")
+    plt.ylabel("reward")
     plt.plot(mean_rewards)
     plt.savefig(f'lunarlander.png')
+    plt.show()
 
 
 if __name__ == '__main__':
-    run(50, is_training=True, render=False)
+    run(2000, is_training=True, render=False)
 
     # run(10, is_training=False, render=True)
 
