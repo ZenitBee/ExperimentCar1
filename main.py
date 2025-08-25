@@ -37,12 +37,12 @@ def run(episodes, is_training=True, render=False):
     env = gym.make("LunarLander-v3", render_mode="none")
 
     # Divide our observation space into segments
-    x_pos_space = np.linspace(-2.5, 2.5, 16)
-    y_pos_space = np.linspace(-2.5, 2.5, 16)
-    x_vel_space = np.linspace(-2.5, 2.5, 16)
-    y_vel_space = np.linspace(-2.5, 2.5, 16)
-    theta_space = np.linspace(-6.2831855, 6.2831855, 24)
-    V_theta_space = np.linspace(-10, 10, 16)
+    x_pos_space = np.linspace(-2.5, 2.5, 20)
+    y_pos_space = np.linspace(-2.5, 2.5, 20)
+    x_vel_space = np.linspace(-2.5, 2.5, 20)
+    y_vel_space = np.linspace(-2.5, 2.5, 20)
+    theta_space = np.linspace(-6.2831855, 6.2831855, 30)
+    V_theta_space = np.linspace(-10, 10, 20)
     bool1_space = [0, 1]
     bool2_space = [0, 1] #these two are not being used
 
@@ -53,14 +53,15 @@ def run(episodes, is_training=True, render=False):
     episodes = episodes
     # number of discrete episodes that will be run by our agent
 
-    learning_rate_a = 0.9
+    learning_rate_a = 0.3
     # alpha or learning rate. bounded between 0 and 1, governs how much the values in the Q table are changed by new estimates.
 
     discount_factor_g = 0.9
     # gamma or discount factor. The value placed on future rewards.
 
     epsilon = 1  # 1 = 100% random actions
-    epsilon_decay_rate = 2 / episodes  # epsilon decay rate
+    # epsilon_decay_rate = 10 / episodes  # epsilon decay rate
+    epsilon_decay_rate = 0.999
     # Epsilon governs how greedy our agent is when selecting agents.
 
     # This is the exploration vs exploitation dichotomy
@@ -76,8 +77,8 @@ def run(episodes, is_training=True, render=False):
 
 
     for i in range(episodes):
-
-        print("current episode is", i)
+        if i % 50 == 0:
+            print("Episodes Completed:", i)
         state = env.reset()  # Starting position
         state_x_pos = np.digitize(state[0][0], x_pos_space)
         state_y_pos = np.digitize(state[0][1], y_pos_space)
@@ -139,7 +140,8 @@ def run(episodes, is_training=True, render=False):
             if truncated_count > 500:
                 truncated = True
 
-        epsilon = max(epsilon - epsilon_decay_rate, 0)
+        # epsilon = max(epsilon - epsilon_decay_rate, 0)
+        epsilon = epsilon*epsilon_decay_rate
 
         rewards_per_episode[i] = rewards
         # print("rewards this episode were", rewards)
@@ -157,14 +159,14 @@ def run(episodes, is_training=True, render=False):
     for t in range(episodes):
         mean_rewards[t] = np.mean(rewards_per_episode[max(0, t - 100):(t + 1)])
     plt.xlabel("episode number")
-    plt.ylabel("reward")
+    plt.ylabel("average reward")
     plt.plot(mean_rewards)
     plt.savefig(f'lunarlander.png')
     plt.show()
 
 
 if __name__ == '__main__':
-    run(2000, is_training=True, render=False)
+    run(1000, is_training=True, render=False)
 
     # run(10, is_training=False, render=True)
 
