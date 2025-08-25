@@ -41,7 +41,7 @@ def run(episodes, is_training=True, render=False):
     y_pos_space = np.linspace(-2.5, 2.5, 20)
     x_vel_space = np.linspace(-2.5, 2.5, 20)
     y_vel_space = np.linspace(-2.5, 2.5, 20)
-    theta_space = np.linspace(-6.2831855, 6.2831855, 30)
+    theta_space = np.linspace(-6.2831855, 6.2831855, 20)
     V_theta_space = np.linspace(-10, 10, 20)
     bool1_space = [0, 1]
     bool2_space = [0, 1] #these two are not being used
@@ -53,7 +53,7 @@ def run(episodes, is_training=True, render=False):
     episodes = episodes
     # number of discrete episodes that will be run by our agent
 
-    learning_rate_a = 0.3
+    learning_rate_a = 0.1
     # alpha or learning rate. bounded between 0 and 1, governs how much the values in the Q table are changed by new estimates.
 
     discount_factor_g = 0.9
@@ -160,13 +160,14 @@ def run(episodes, is_training=True, render=False):
         mean_rewards[t] = np.mean(rewards_per_episode[max(0, t - 100):(t + 1)])
     plt.xlabel("episode number")
     plt.ylabel("average reward")
+    plt.title(f"Learning rate = {learning_rate_a} Epsilon decay = {epsilon_decay_rate} Q table dimensions = {q.shape}", fontsize=8)
     plt.plot(mean_rewards)
     plt.savefig(f'lunarlander.png')
     plt.show()
 
 
 if __name__ == '__main__':
-    run(1000, is_training=True, render=False)
+    run(5000, is_training=True, render=False)
 
     # run(10, is_training=False, render=True)
 
